@@ -1,0 +1,194 @@
+$o-name: '.o-Btn';
+
+#{$o-name} {
+    border: 0;
+    background-color: #00d7d5;
+    color: #fff;
+    width: 20em;
+    padding: 1.25em 1em;
+    border-radius: 36px;
+    text-transform: uppercase;
+    font-size: .75em;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    
+    &:hover {    
+        box-shadow: 2px 3px 13px 2px rgba(160,160,160,0.5);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 1px 0 1px rgba(160,160,160,.75);
+    }
+}
+
+a#{$o-name}-link.o-Icon--link {
+    justify-content: flex-end;
+}
+
+#{$o-name}--orange {
+    padding-right: 4em;
+    padding-left: 4em;
+    background-color: orange;
+    font-weight: 500;
+}
+
+#{$o-name}--white {
+    background-color: $white;
+}
+
+:is(.c-Section--blue, .c-Section--green) #{$o-name}--white {
+    color: $cast-blue;
+}
+
+
+/*
+--------------- Animation -----------------
+*/
+#{$o-name}--animate {
+    &:before,
+    &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+#{$o-name}--hyperion {
+    background-color: #00d7d5;
+	font-family: input-mono-narrow, monospace;
+	font-weight: 500;
+	padding: 1rem 1.5rem;
+	// border: 1px solid $white;
+	overflow: hidden;
+	color: white;
+}
+
+#{$o-name}--hyperion span {
+	display: block;
+	position: relative;
+}
+
+#{$o-name}--hyperion > span {
+	overflow: hidden;
+}
+
+#{$o-name}--hyperion > span > span {
+	overflow: hidden;
+	// mix-blend-mode: difference;
+}
+
+#{$o-name}--hyperion:hover > span > span {
+	animation: MoveUpInitial 0.2s forwards, MoveUpEnd 0.2s forwards 0.2s;
+    color: white !important;
+}
+
+@keyframes MoveUpInitial {
+	to {
+		transform: translate3d(0,-105%,0);
+	}
+}
+
+@keyframes MoveUpEnd {
+	from {
+		transform: translate3d(0,100%,0);
+	}
+	to {
+		transform: translate3d(0,0,0);
+	}
+}
+
+#{$o-name}--hyperion::before {
+	content: '';
+	background: $white;
+	transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
+	transform-origin: 100% 50%;
+}
+
+.c-Section__container--plain #{$o-name}--hyperion::before {
+    background-color: $cast-blue;
+    color: $white;
+}
+
+#{$o-name}--blue#{$o-name}--hyperion::before {
+    background-color: #03a9f4;
+} 
+
+#{$o-name}--hyperion:hover::before {
+	transform: scale3d(0,1,1);
+	transform-origin: 0% 50%;
+}
+
+input[type='email'].o-Form-control {
+    border: 0;
+    border-bottom: 2px solid #dadada;
+    width: 23em;
+    transition: .3s ease all;
+    font-size: .875rem;
+}
+
+.o-Form-button__wrapper {
+    margin-top: 1em;
+}
+
+input[type='email'].o-Form-control:focus {
+    outline: none;
+    border-bottom-color: #909090;
+}
+
+#{$o-name}:disabled:before {
+    background-color: #b0afaf !important;
+    cursor: not-allowed;
+}
+
+#{$o-name}:disabled:hover {
+    transform: none;
+    transform-origin: initial;
+    animation: none
+}
+
+.o-Form-invalid {
+    color: red;
+    text-align: left;
+}
+
+.c-Section--blue .o-Form-invalid {
+    color: #f01c1c;
+    text-align: left;
+    text-shadow: 1px 0px 1px #737373;
+}
+
+.copy:link,
+.copy:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 1s;
+    position: absolute;
+}
+
+.copy:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.copy::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all .4s;
+}
+
+.copy:focus::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
