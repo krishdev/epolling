@@ -6,7 +6,8 @@ var eyfsqlConnection = mysql.createPool({
     user: 'krishna',
     password: 'Aprilfool_20',
     database: 'eyf',
-    multipleStatements: true
+    multipleStatements: true,
+    socketPath: '/var/run/mysqld/mysqld.sock'
 });
 
 module.exports = eyfsqlConnection;
