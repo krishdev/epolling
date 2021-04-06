@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 //Local
 var eyfsqlConnection = mysql.createPool({
-    host: '127.0.0.1',
+    host: 'localhost',
     port: '3306',
     user: 'krishna',
     password: 'Aprilfool_20',
