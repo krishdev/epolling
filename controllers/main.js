@@ -82,7 +82,7 @@ const getConstituencies = async (req, res) => {
 const saveVote = async (req, res) => {
     const constituencyId = req.body.constitutionId || req.session.constituencyId;
     const partyId = req.body.partyId || req.session.partyId;
-    let ipAddress = req.connection.remoteAddress;    
+    let ipAddress = (req.headers['x-forwarded-for'] || '').split(',')[0] || req.connection.remoteAddress;    
     if (ipAddress) {
         let countIpAddress = await checkIpAddressCount(ipAddress);
         if (countIpAddress && Array.isArray(countIpAddress) && countIpAddress.length) {
@@ -90,14 +90,14 @@ const saveVote = async (req, res) => {
                 let count = countIpAddress[0].count;
                 let isBlocked = count >= 4 ? 1 : 0;
                 try {
-                    // let ipAddressUpdated = await updateIpAddress(++count, isBlocked, countIpAddress[0].id); 
+                    let ipAddressUpdated = await updateIpAddress(++count, isBlocked, countIpAddress[0].id); 
                 } catch (error) {
                     sendErrorEmail(error);
                 }
             }
         } else {
             try {
-                // let ipAddressSaved = await saveIpAddress(ipAddress);
+                let ipAddressSaved = await saveIpAddress(ipAddress);
             } catch (error) {
                 sendErrorEmail(error);
             }
