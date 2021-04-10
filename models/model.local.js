@@ -1,14 +1,15 @@
 const mysql = require('mysql');
-const config = require('../helper-functions/config');
+const {config} = require('../helper-functions/config');
+
 //Local
 var eyfsqlConnection = mysql.createPool({
-    host: config.host,
+    host: config.mysql.host,
     // port: config.port,
-    user: config.user,
-    password: config.password,
-    database: config.database,
-    multipleStatements: config.multipleStatements,
-    socketPath:config.socketPath
+    user: config.mysql.user,
+    password: config.mysql.password,
+    database: config.mysql.database,
+    multipleStatements: config.mysql.multipleStatements,
+    socketPath:config.mysql.socketPath
 });
 
 module.exports = eyfsqlConnection;
