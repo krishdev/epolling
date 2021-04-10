@@ -1,4 +1,5 @@
 var nodemailer = require("nodemailer");
+const { config } = require("./config");
 //Send email through npm sendmail
 exports.sendErrorEmail = function (errorMessage) {
     console.log('entered');
@@ -9,18 +10,18 @@ exports.sendErrorEmail = function (errorMessage) {
 	    secure: true,
 		auth: {
 			//xoauth2: xoauth2.createXOAuth2Generator({
-				type: 'OAuth2',
-				user: "krishnakumar4315@gmail.com",
-				clientId: "603367316954-67pej7ed33fg529n6e5cmve5pugclro2.apps.googleusercontent.com",
-				clientSecret:"QOOem3Zel6T456JXACjWZ1Cv",
-				refreshToken: "1/6KhePRPmLJlMpls--t2cP_LJ-gma0-qLLY6bvC4odr2d30Ryt1QoUATvEzgtA2CT",
-				accessToken: "ya29.GlsMBtW6Ka79RsyMoV9pPvQ21nRl_ClYEII2b1eVtbCwOeps_oII2gZK8ISEEGiqLq5bCIPKmWUV3hW5JemtiyUwnfz9niwzKKDxKcWECvqzeWvkHFk4lzWXcx0B"
+				type: config.type,
+				user: config.user,
+				clientId: config.clientId,
+				clientSecret: config.clientSecret,
+				refreshToken: config.refreshToken,
+				accessToken: config.accessToken
 			//})
 		}
 	});
 	var mailOptions = { //email options
-		from: 'krishnakumar4315@gmail.com', // sender address.  Must be the same as authenticated user if using Gmail.
-		to: 'info@electyourfuture.com', // receiver
+		from: config.email.error.from, // sender address.  Must be the same as authenticated user if using Gmail.
+		to: config.email.error.to, // receiver
 		subject: 'Server Error Occurred', // subject
 		text: '', // body,
 		html: errorMessage
