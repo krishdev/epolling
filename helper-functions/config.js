@@ -17,7 +17,7 @@ exports.config = {
         accessToken: "ya29.GlsMBtW6Ka79RsyMoV9pPvQ21nRl_ClYEII2b1eVtbCwOeps_oII2gZK8ISEEGiqLq5bCIPKmWUV3hW5JemtiyUwnfz9niwzKKDxKcWECvqzeWvkHFk4lzWXcx0B",
         error: {
             from: 'krishnakumar4315@gmail.com',
-            to: 'info@electyourfuture.com'
+            to: 'info@electyourfuture.com',
         }
     } 
 }
