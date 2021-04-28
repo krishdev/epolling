@@ -4,7 +4,7 @@ var mainControler = require('../controllers/main');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('results-home', { title: 'Express' });
 });
 
 /* GET about us page. */
@@ -24,7 +24,7 @@ router.get('/disclaimer-privacy-policy/', function(req, res, next) {
 
 /* GET disclaimer page. */
 router.get('/results/', function(req, res, next) {
-  res.render('results', { title: 'Express' });
+  res.render('final-results', { title: 'Express' });
 });
 
 /* GET State and constituencies page. */
