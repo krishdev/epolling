@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 helper-functions/config.js
 config.js
+eyf-data-4-27.sql
