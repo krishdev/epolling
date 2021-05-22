@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mainControler = require('../controllers/main');
+var playTimeController = require('../controllers/playtime');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -37,6 +38,15 @@ router.post('/cast-your-vote/', mainControler.saveVote);
 
 /* Vote Success */
 router.get('/assembly-vote-casted-successfully/', mainControler.successScreen);
+
+/* Play Time */
+router.get('/play-time/', (req, res) => {
+  res.render('play-time');
+});
+router.get('/buzzer/', (req, res) => {
+  res.render('buzzer');
+});
+router.post('/play-time/', playTimeController.setSessionStartPlayer);
 
 /* API  */
 
