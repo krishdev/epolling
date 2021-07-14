@@ -45,12 +45,8 @@
                 </div>
                 <div class="game-next">
                     <button type="button" @click="nextClue" class="btn btn-outline-primary" :disabled="ifAllClue">Next Clue</button>
-                </div>
-                <div class="game-next" v-if="ifAllClue">
-                    <button type="button" @click="enableAnswer" data-bs-toggle="modal" data-bs-target="#showAnswer" class="btn btn-success">Show Answer</button>
-                </div>
-                <div class="game-next" v-if="ifAllClue && showAnswer">
-                    <button type="button" @click="nextQuestion" class="btn btn-primary">Next Question</button>
+                    <button v-if="ifAllClue" type="button" @click="enableAnswer" data-bs-toggle="modal" data-bs-target="#showAnswer" class="btn btn-success">Show Answer</button>
+                    <button v-if="ifAllClue && showAnswer" type="button" @click="nextQuestion" class="btn btn-primary">Next Question</button>
                 </div>
             </div>
 
@@ -179,7 +175,7 @@
                         {
                             answer: 'Oru ponnu onnu nan pathen',
                             video: '',
-                            clues: [{img:'One'},{img:'Women'},{img:'One'},{img: 'Nan'},{img:'Watching'},{img:'Centimeter'},{img:'Smile'}],
+                            clues: [{img:'One'},{img:'Women'},{img:'One'},{img: 'Nan'},{img:'Watching'},{img:'Centimeter'},{img:'smile'}],
                             visible: false
                         },
                         {
@@ -278,7 +274,6 @@
                     nextClue () {
                         let allAnswersVisible = true;
                         let exitIndex = 0;
-                        debugger;
                         for(let i=0; i < this.option.clues.length ; i++) {
                             if (!this.option.clues[i].visible) {        	
                             exitIndex = i;

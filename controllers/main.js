@@ -1,5 +1,6 @@
 const eyfsqlConnection = require('../models/model.local');
 const {sendErrorEmail} = require('../helper-functions/email-users');
+const e = require('express');
 
 const getStatesNconstituencies = async (req, res, error) => {
     try {
@@ -176,10 +177,10 @@ const saveEmail = async (req, res) => {
 };
 
 const getResults = async (req, res) => {
-    const constituencyId = req.body.constituencyId;
+    const state = req.body.state;
     try {
-        let results = await getPollingResults(constituencyId);
-        if (results && results.length) {
+        let results = await getPollingResults(state);
+        if (results) {
             res.json({
                 results
             })
@@ -439,19 +440,58 @@ function checkEmailTokenExists (value) {
     })
 }
 
-function getPollingResults (constituencyId) {
+function getPollingResults (state) {
     return new Promise((resolve, reject) => {
         eyfsqlConnection.getConnection(function (err, connection) {
         if (err) {
             connection.release();
             console.log(err);
         } else {         
-            const query = `SELECT * FROM polling WHERE constituencyId = ${constituencyId};`;
+            const query = `select poll.id, const.id constId, const.constituency, party.name partyName, count(*) votes from polling poll 
+            left join constituencies const on const.id = poll.constituencyId 
+            left join parties party on party.id = poll.partyId  WHERE const.stateCode = '${state}'
+            group by poll.partyId, poll.constituencyId 
+            order by const.constituency asc, votes desc;`;
             connection.query(query, (err, row) => {
                 connection.release();
                 if(!err) {
-                    var constituencies = row;
-                    resolve(constituencies);
+                    const constituencies = row;
+                    let allConstiCount = {};
+                    for (let i = 0; i < constituencies.length; i++) {
+                        let thisConsti = constituencies[i];
+                        if (allConstiCount.hasOwnProperty(thisConsti.constituency)) {
+                            allConstiCount[thisConsti.constituency].count += thisConsti.votes;
+                            allConstiCount[thisConsti.constituency].parties += 1;
+                            if (thisConsti.votes >= allConstiCount[thisConsti.constituency].leadCount) {
+                                if (thisConsti.votes == allConstiCount[thisConsti.constituency].leadCount) {
+                                    allConstiCount[thisConsti.constituency].sameCount.push(thisConsti.partyName);
+                                } else {
+                                    allConstiCount[thisConsti.constituency].leading = thisConsti.partyName;
+                                    allConstiCount[thisConsti.constituency].leadCount = thisConsti.votes;
+                                }
+                            }
+                        } else {
+                            allConstiCount[thisConsti.constituency] = {
+                                count: thisConsti.votes,
+                                leading: thisConsti.partyName,
+                                leadCount: thisConsti.votes,
+                                sameCount: [],
+                                parties: 1
+                            }
+                        }
+                    }
+                    let overall = {};
+                    for (const key in allConstiCount) {
+                        const element = allConstiCount[key];
+                        allConstiCount[key].average = Math.round((element.leadCount / element.count) * 100);
+                        if (overall.hasOwnProperty(element.leading)) {
+                            overall[element.leading] += 1;
+                        } else {
+                            overall[element.leading] = 1;
+                        }
+                    }
+                    
+                    resolve(allConstiCount);
                 } else {
                     reject (`Unexpected error occurred while performing getPollingResults ${query}`);
                 }
