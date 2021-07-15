@@ -35,9 +35,15 @@
         <script th:inline="javascript">
         var teamOne = "<%- playerOneName %>";
         var teamTwo = "<%- playerTwoName %>";
+        <% if (currentQuestId) { %>
         var currentQuestId = <%- currentQuestId %>;
+        <% } %>
+        <% if (questionIds) { %>
         var questionIds = <%- JSON.stringify(questionIds) %>;
+        <% } %>
+        <% if (scoreKeeper) { %>
         var scoreKeeper = <%- JSON.stringify(scoreKeeper) %>;
+        <% } %>
         </script>
     </head>
     <body>

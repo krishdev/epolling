@@ -49,7 +49,7 @@ router.get('/game-in-session/', (req, res) => {
   const playerOneName = req.session.playerOneName;
   const playerTwoName = req.session.playerTwoName;
   const questionIds = req.session.questionIds;
-  const scoreKeeper = req.session.scoreKeeper;
+  const scoreKeeper = req.session.scoreKeeper || {teamOne: 0, teamTwo: 0};
   const currentQuestId = req.session.currentQuestId;
   if (playerOneName) {
     res.render('game-in-session', {playerOneName: playerOneName, playerTwoName: playerTwoName, questionIds, scoreKeeper, currentQuestId});

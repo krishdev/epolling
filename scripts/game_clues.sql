@@ -36,4 +36,4 @@ INSERT INTO eyf.game_clues (questionId, imageName) VALUES
 (27, 'Singh'),(27,'Pen'),(27,'A'),(27,'Singh'),(27,'Pen'),(27,'A'),
 (28, 'Crow'),(28,'Push'),(28,'Cricket'),(28,'Fell'),(28,'Wicket'),
 (29, 'Lace'),(29,'say-ah'),(29,'Lace'),(29,'say-ah'),
-(30, 'Selfie'),(30,'Women'),(30,'kiss'),(30,'kiss');
+(30, 'Selfie'),(30,'Grass'),(30,'kiss'),(30,'kiss');

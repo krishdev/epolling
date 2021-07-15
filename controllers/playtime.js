@@ -174,6 +174,7 @@ function fetchCluesForQuestId (questionId) {
                         const clues = row.map(item=>item.imageName);
                         resolve(clues);
                     } else {
+                        console.log('FetchClue: ' + query, err);
                         reject (`Unexpected error occurred while performing getAllStates ${query}`);
                     }
                 })
@@ -191,6 +192,7 @@ function getAnswerByQuestId (questionId) {
             } else {
                 const query = `SELECT answer FROM eyf.game_questions where questionId = ${questionId};`
                 connection.query(query, (err, row) => {
+                    connection.release();
                     if (!err) {
                         if (row && Array.isArray(row) && row.length) {
                             resolve (row[0].answer);
@@ -198,6 +200,7 @@ function getAnswerByQuestId (questionId) {
                             resolve ('');
                         }
                     } else {
+                        console.log('getquesId: ' + query, err);
                         reject (`Unexpected error occurred while performing getAllStates ${query}`);
                     }
                 })
