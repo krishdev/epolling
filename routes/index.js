@@ -41,12 +41,34 @@ router.get('/assembly-vote-casted-successfully/', mainControler.successScreen);
 
 /* Play Time */
 router.get('/play-time/', (req, res) => {
+  console.log(req.session.playerOneName);
   res.render('play-time');
 });
+
+router.get('/game-in-session/', (req, res) => {
+  const playerOneName = req.session.playerOneName;
+  const playerTwoName = req.session.playerTwoName;
+  const questionIds = req.session.questionIds;
+  const scoreKeeper = req.session.scoreKeeper;
+  const currentQuestId = req.session.currentQuestId;
+  if (playerOneName) {
+    res.render('game-in-session', {playerOneName: playerOneName, playerTwoName: playerTwoName, questionIds, scoreKeeper, currentQuestId});
+  } else {
+    res.writeHead(302, {
+        'Location': '/play-time/'
+    });
+    res.end();   
+  }
+});
+
 router.get('/buzzer/', (req, res) => {
   res.render('buzzer');
 });
-router.post('/play-time/', playTimeController.setSessionStartPlayer);
+router.post('/game-in-session/', playTimeController.setSessionStartPlayer);
+
+router.post('/get-questions/', playTimeController.getRandomQuestions);
+
+router.post('/get-clues/', playTimeController.getClues);
 
 /* API  */
 

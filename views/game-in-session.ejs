@@ -8,6 +8,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.3/vue-resource.min.js"></script>
         <style>
             .game-logo {
                 width: 15%;
@@ -25,7 +26,19 @@
             .game-next {
                 margin-top: 5em;
             }
+
+            .game-next .btn {
+                margin-right: 1em;
+                display: inline-block;
+            }
         </style>
+        <script th:inline="javascript">
+        var teamOne = "<%- playerOneName %>";
+        var teamTwo = "<%- playerTwoName %>";
+        var currentQuestId = <%- currentQuestId %>;
+        var questionIds = <%- JSON.stringify(questionIds) %>;
+        var scoreKeeper = <%- JSON.stringify(scoreKeeper) %>;
+        </script>
     </head>
     <body>
         <div id="app" class="px-4 py-2 my-5 text-center">
@@ -33,6 +46,7 @@
             <div class="game-logo"><img class="d-block mx-auto mb-4" src="/assets/icons/game-logo.png" alt="logo"></div>
             <h1 class="display-5 fw-bold">Guess Pani Sollu</h1>
             <div class="col-lg-6 mx-auto">
+                <p class="lead mb-2"><b><%- playerOneName %>: </b><span>#{{scoreKeeper.teamOne}}</span>&nbsp;&nbsp;<b><%- playerTwoName %>: </b><span>#{{scoreKeeper.teamTwo}}</span></p>
                 <p class="lead mb-4"><b>Rules:</b> On the screen you will get 1 to many clues, from that you got to guess the song name out of it.</p>
             </div>
             <div class="py-1">
@@ -44,9 +58,10 @@
                     </div>
                 </div>
                 <div class="game-next">
+                    <button type="button" v-if="ifAllClue && showAnswer && lastQuestion" class="btn btn-danger" @click="restartGame">Play Again</button>
                     <button type="button" @click="nextClue" class="btn btn-outline-primary" :disabled="ifAllClue">Next Clue</button>
                     <button v-if="ifAllClue" type="button" @click="enableAnswer" data-bs-toggle="modal" data-bs-target="#showAnswer" class="btn btn-success">Show Answer</button>
-                    <button v-if="ifAllClue && showAnswer" type="button" @click="nextQuestion" class="btn btn-primary">Next Question</button>
+                    <button v-if="ifAllClue && showAnswer && !lastQuestion" type="button" @click="nextQuestion" class="btn btn-primary">Next Question</button>
                 </div>
             </div>
 
@@ -58,7 +73,42 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <p class="display-5">{{songName}}</p>
+                      <p class="display-5"><b>{{lastQuestion ? 'The End' : ''}}</b> <br>{{songName}}</p>
+                      <div class="row">
+                          <div class="col-6">
+                            <div class="card text-center">
+                                <div class="card-header">
+                                  Team #1
+                                </div>
+                                <div class="card-body">
+                                  <h5 class="card-title"><%- playerOneName %></h5>
+                                  <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                                  <button type="button" :disabled="disableScoreBtns.teamOne" class="btn btn-primary" @click.prevent="scoreCounter(1)">Add +1</button>
+                                </div>
+                                <div class="card-footer text-muted">
+                                  Total Points #{{scoreKeeper.teamOne}}
+                                </div>
+                              </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="card text-center">
+                                <div class="card-header">
+                                  Team #2
+                                </div>
+                                <div class="card-body">
+                                  <h5 class="card-title"><%- playerTwoName %></h5>
+                                  <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                                  <button type="button" :disabled="disableScoreBtns.teamTwo" @click.prevent="scoreCounter(2)" class="btn btn-primary">Add +1</button>
+                                </div>
+                                <div class="card-footer text-muted">
+                                  Total Points #{{scoreKeeper.teamTwo}}
+                                </div>
+                              </div>
+                          </div>
+                          <div class="col-12 text-center">
+                            <button type="button" class="btn btn-success mt-3" data-bs-dismiss="modal" aria-label="Close">No points/Skip</button>
+                          </div>
+                      </div>
                     </div>                    
                   </div>
                 </div>
@@ -69,206 +119,29 @@
             new Vue({
                 el: "#app",
                 data: {
-                    questions: [
-                        {
-                            answer: 'Pudhu vellai malai',
-                            video: '',
-                            clues: [{img:'new'},{img:'white'},{img:'rain'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Telephone mani pol siripaval',
-                            video: '',
-                            clues: [{img:'telephone'},{img:'bell'},{img:'poll'},{img: 'smile'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Kadhal kaditham ketkavae',
-                            video: '',
-                            clues: [{img:'heart'},{img:'letter'},{img:'hear'},{img: 'way'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Kadhal rojavae',
-                            video: '',
-                            clues: [{img:'heart'},{img:'Roja'},{img:'way'},{img: 'Question'},{img: 'You'},{img: 'Question'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Enavalae adi Enavalae',
-                            video: '',
-                            clues: [{img:'Number'},{img:'Avul'},{img:'A'},{img: 'Slap'}, {img:'Number'}, {img:'Avul'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Enna vilai alaghae unnai vilaiku',
-                            video: '',
-                            clues: [{img:'Me'},{img:'Dollar'},{img:'Alagu'},{img: 'A'},{img: 'You'},{img: 'Dollar'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Chinna Chinna Asai',
-                            video: '',
-                            clues: [{img:'Small'},{img:'Small'},{img:'Asai'},{img: 'Feather'},{img: 'Slap'},,{img: 'Asai'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'En veetu thotathil poo',
-                            video: '',
-                            clues: [{img:'Number'},{img:'House'},{img:'Garden'},{img: 'Dhill'},{img: 'Flower'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Kasumela ada kasuvechu kotukira',
-                            video: '',
-                            clues: [{img:'Money'},{img:'Up'},{img:'Money'},{img: 'Come'},{img: 'Knock'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Oru mani adithal kannae',
-                            video: '',
-                            clues: [{img:'One'},{img:'bell'},{img:'Slap'},{img: 'Paper'},{img: 'Eye'},{img: 'You'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Un per solla asai than',
-                            video: '',
-                            clues: [{img:'You'},{img:'Pear'},{img:'Tell'},{img: 'Asai'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Strawberry kannae viveli pennae',
-                            video: '',
-                            clues: [{img:'Straw'},{img:'berry'},{img:'Eye'},{img: 'A'},{img: 'Space'},{img: 'Pen'},{img: 'A'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Ennai thalata varuvala',
-                            video: '',
-                            clues: [{img:'Number'},{img:'Eye'},{img:'Thalattu'},{img: 'Varu'},{img: 'Come'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'O butterfly butterfly en virithai siragai',
-                            video: '',
-                            clues: [{img:'say-o'},{img:'Butter'},{img:'Fly'},,{img:'Butter'},{img:'Fly'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Colombus colombus vittachu leave',
-                            video: '',
-                            clues: [{img:'Kolambu'},{img:'Bus'},{img:'Kolambu'},{img: 'Bus'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Thuli Thuli Thuli malai',
-                            video: '',
-                            clues: [{img:'Drop'},{img:'Drop'},{img:'Drop'},{img: 'rain'},{img: 'Poop'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Partha mudhal nalae unnai',
-                            video: '',
-                            clues: [{img:'Watching'},{img:'First'},{img:'4'},{img: 'A'},{img:'You'},{img: 'Watching'},{img:'First'},{img: '4'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Oru ponnu onnu nan pathen',
-                            video: '',
-                            clues: [{img:'One'},{img:'Women'},{img:'One'},{img: 'Nan'},{img:'Watching'},{img:'Centimeter'},{img:'smile'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Devathaiya kanden kadhalil vilunthen',
-                            video: '',
-                            clues: [{img:'Angel'},{img:'Watching'},{img:'heart'},{img: 'Fell'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Ondra renda asaigal',
-                            video: '',
-                            clues: [{img:'One'},{img:'2'},{img:'Asai'},{img: 'Stone'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Manja kattu maina',
-                            video: '',
-                            clues: [{img:'Manjal'},{img:'Forest'},{img:'Myna'},{img: 'Me'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Pallanguliyin vattan parthen',
-                            video: '',
-                            clues: [{img:'Pallanguli'},{img:'Pit'},{img:'Circle'},{img: 'Watching'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Google Goolge panni pathen',
-                            video: '',
-                            clues: [{img:'Google'},{img:'Google'},{img:'Pig'},{img: 'Watching'},{img: 'Globe'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Minnali pidithu minnali pidithu',
-                            video: '',
-                            clues: [{img:'Thunder'},{img:'Catch'},{img:'Thunder'},{img: 'Catch'},{img: 'clouds'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Pookal pookum tharunam',
-                            video: '',
-                            clues: [{img:'Flower'},{img:'Stone'},{img:'Bloom'},{img: 'Tharun'},{img: '6'},{img: 'uyire'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Koodamela koodai vechu',
-                            video: '',
-                            clues: [{img:'Basket'},{img:'Up'},{img:'Basket'},{img: 'Keep'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Singapennae singapennae',
-                            video: '',
-                            clues: [{img:'Singh'},{img:'Pen'},{img:'A'},{img: 'Singh'},{img:'Pen'},{img:'A'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Kadhal cricketu vilunthiduchu wicketu',
-                            video: '',
-                            clues: [{img:'Crow'},{img:'Push'},{img:'Cricket'},{img: 'Fell'},{img: 'Wicket'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Lesa Lesa nee ellamal valvathu lessa',
-                            video: '',
-                            clues: [{img:'Lace'},{img:'say-ah'},{img:'Lace'},{img: 'say-ah'}],
-                            visible: false
-                        },
-                        {
-                            answer: 'Selfie pulla umma umma',
-                            video: '',
-                            clues: [{img:'Selfie'},{img:'Women'},{img:'kiss'},{img: 'kiss'}],
-                            visible: false
-                        }
-                    ],
+                    questions: window.questionIds || [],
                     option: {
                         answer: '',
-                    question: '',
-                    clues: ''
+                        question: '',
+                        clues: []
                     },
+                    allOptions: {clues: [], answer: ''},
                     songName: '',
                     showAnswer: false,
                     ifAllClue: false,
-                    currentQuestion: 0
+                    currentQuestion: window.currentQuestId || 0,
+                    lastQuestion: false,
+                    scoreKeeper: {
+                        teamOne: window.scoreKeeper ? window.scoreKeeper.teamOne : 0,
+                        teamTwo: window.scoreKeeper ? window.scoreKeeper.teamTwo : 0
+                    },
+                    disableScoreBtns: {
+                        teamOne: false,
+                        teamTwo: false
+                    }
                 },
                 created () {
-                    this.option = this.questions[0];
-                    for(let i = 0; i < this.option.clues.length;i++) {
-                        if (i == 0) {
-                            this.option.clues[i].visible = true;
-                            break; 
-                        }
-                    }
+                    this.getClues();
                 },
                 methods: {
                     nextClue () {
@@ -289,17 +162,18 @@
                         this.$forceUpdate();
                     
                     },
-                    nextQuestion () {
+                    async nextQuestion () {
                         this.reset();
-                        if (this.currentQuestion < this.questions.length) {
-                            this.option = this.questions[++this.currentQuestion];    
-                            for(let i = 0; i < this.option.clues.length;i++) {
-                                if (i == 0) {
-                                    this.option.clues[i].visible = true;
-                                    break; 
-                                }
+                        try {
+                            const option = await this.getClues();
+                            this.disableScoreBtns = {
+                                teamOne: false,
+                                teamTwo: false
                             }
-                        }
+                        } catch (error) {
+                            console.log(error);
+                            alert('Error occurred')
+                        }                        
                         this.$forceUpdate();
                     
                     },
@@ -314,12 +188,48 @@
                         this.option = {
                             answer : '',
                             question: '',
-                            clues: ''
+                            clues: []
                         }
                     },
                     randomNumber(min, max) { 
                         return Math.random() * (max - min) + min;
-                    } 
+                    },
+                    getClues (questionId) {
+                        return new Promise ((resolve, reject) => {
+                            this.$http.post('/get-clues/', {scoreKeeper: this.scoreKeeper, currentQuestion: this.currentQuestion}).then(res => {
+                                const responseBody = res.body;
+                                if (responseBody.success) {
+                                    this.lastQuestion = responseBody.endOfQuestion;
+                                    this.allOptions.clues = responseBody.clues;
+                                    this.allOptions.answer = responseBody.answer;
+                                    this.currentQuestion = responseBody.nextQuestId;
+                                    this.option.answer = this.allOptions.answer;
+                                    this.allOptions.clues.forEach((item, i) => {
+                                        this.option.clues.push({
+                                            visible: i == 0 ? true : false,
+                                            img: item
+                                        })
+                                    });
+                                    resolve(this.option);
+                                }
+                            },error=>{
+                                console.log(error);
+                                reject (error.body);
+                            })
+                        })
+                    },
+                    scoreCounter (team) {
+                        if (team === 1) {
+                            ++this.scoreKeeper.teamOne;
+                            this.disableScoreBtns.teamTwo = true;
+                        } else {
+                            ++this.scoreKeeper.teamTwo; 
+                            this.disableScoreBtns.teamOne = true;
+                        }
+                    },
+                    restartGame () {
+                        
+                    }
                 }
                 })
         </script>
