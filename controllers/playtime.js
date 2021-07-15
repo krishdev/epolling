@@ -14,7 +14,7 @@ async function setSessionStartPlayer (req, res) {
             let questionIds = await fetchGameIds();
             
             if (insertPlayers && questionIds && Array.isArray(questionIds) && questionIds.length) {
-                req.session.questionIds = req.session.questionIds || config.shuffle(questionIds.splice(0,5));
+                req.session.questionIds = req.session.questionIds || config.shuffle(questionIds);
                 req.session.currentQuestId = req.session.currentQuestId || req.session.questionIds[0];
                 req.session.sessionId = insertPlayers.sessionId;
                 res.redirect('/game-in-session/');

@@ -41,7 +41,7 @@ router.get('/assembly-vote-casted-successfully/', mainControler.successScreen);
 
 /* Play Time */
 router.get('/play-time/', (req, res) => {
-  console.log(req.session.playerOneName);
+  req.session.destroy();
   res.render('play-time');
 });
 
