@@ -7,7 +7,7 @@ CREATE TABLE `eyf`.`game_questions` (
 INSERT INTO eyf.game_questions (id, lang, questionId, answer) VALUES
 (1, 'ta', 1, 'Pudhu vellai malai'),
 (2, 'ta', 2, 'Telephone mani pol siripaval'),
-(3, 'ta', 3, 'Kadhal kaditham ketkavae'),
+(3, 'ta', 3, 'Kadhal kaditham thetavae'),
 (4, 'ta', 4, 'Kadhal rojavae'),
 (5, 'ta', 5, 'Enavalae adi Enavalae'),
 (6, 'ta', 6, 'Enna vilai alaghae unnai vilaiku'),

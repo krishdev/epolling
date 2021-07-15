@@ -9,7 +9,7 @@ CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
 INSERT INTO eyf.game_clues (questionId, imageName) VALUES
 (1, 'new'),(1,'white'),(1,'rain'),
 (2, 'telephone'),(2,'bell'),(2,'poll'),(2,'smile'),
-(3, 'heart'),(3,'letter'),(3,'hear'),(3,'way'),
+(3, 'heart'),(3,'letter'),(3,'thetave'),(3,'way'),
 (4, 'heart'),(4,'Roja'),(4,'way'),(4,'Question'),(4,'You'),(4,'Question'),
 (5, 'Number'),(5,'Avul'),(5,'A'),(5,'Slap'),(5,'Number'),(5,'Avul'),
 (6, 'Me'),(6,'Dollar'),(6,'Alagu'),(6,'A'),(6,'You'),(6,'Dollar'),
