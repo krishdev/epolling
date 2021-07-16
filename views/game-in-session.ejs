@@ -21,6 +21,7 @@
                 max-width: 300px;
                 border: 1px solid #dadada;
                 box-shadow: 3px 3px #c5c5c5;
+                margin: 0 auto;
             }
 
             .game-next {
@@ -28,8 +29,21 @@
             }
 
             .game-next .btn {
-                margin-right: 1em;
+                margin-bottom: 1em;
                 display: inline-block;
+                width: 100%;
+            }
+
+            @media (min-width: 640px) {
+                .game-next .btn {
+                    width: auto;
+                    margin-bottom: 0;
+                    margin-right: 1em;
+                }
+            }
+
+            .clue_wrapper {
+                align-items: center;
             }
         </style>
         <script th:inline="javascript">
@@ -56,7 +70,7 @@
                 <p class="lead mb-4"><b>Rules:</b> On the screen you will get 1 to many clues, from that you got to guess the song name out of it.</p>
             </div>
             <div class="py-1">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-5" style="justify-content: center;">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-5 clue_wrapper">
                     <div class="col" v-for="clue in option.clues" v-if="clue.visible">
                         <div class="game-image">
                             <img :src="'/assets/games/'+clue.img+'.png'" alt="clue">
